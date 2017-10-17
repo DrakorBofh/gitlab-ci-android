@@ -1,13 +1,10 @@
 # Docker Image for Build Android 
-[![](https://images.microbadger.com/badges/image/saeedmasoumi/gitlab-ci-android.svg)](https://microbadger.com/images/saeedmasoumi/gitlab-ci-android "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/saeedmasoumi/gitlab-ci-android.svg)](https://microbadger.com/images/saeedmasoumi/gitlab-ci-android "Get your own version badge on microbadger.com")
 
 
 GitLab CI image for building and testing Android apps
 
 This code on repo will automatically build on Docker Hub : 
-
-https://hub.docker.com/r/saeedmasoumi/gitlab-ci-android/
+https://hub.docker.com/r/lazzaretti/gitlab-ci-android/
 
 ## Example `.gitlab-ci.yml` file
 ```yml
