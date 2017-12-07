@@ -1,15 +1,15 @@
 #
 # GitLab CI: Android v0.2
 #
-# https://hub.docker.com/r/showcheap/gitlab-ci-android/
+# https://hub.docker.com/r/drakor/gitlab-ci-android/
 #
 
 FROM ubuntu:16.04
-MAINTAINER Saeed Masoumi <s-masoumi@live.com>
+MAINTAINER Fernando Anthony Ristaño <fernando.ristano@gmail.com>
 
 ENV VERSION_SDK_TOOLS "25.2.5"
-ENV VERSION_BUILD_TOOLS "26.1.1"
-ENV VERSION_TARGET_SDK "26"
+ENV VERSION_BUILD_TOOLS "25.0.3"
+ENV VERSION_TARGET_SDK "25"
 
 ENV SDK_PACKAGES "build-tools-${VERSION_BUILD_TOOLS},android-${VERSION_TARGET_SDK},addon-google_apis-google-${VERSION_TARGET_SDK},platform-tools,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository,sys-img-x86-android-${VERSION_TARGET_SDK},sys-img-x86-google_apis-${VERSION_TARGET_SDK},extra-google-google_play_services,extra-google-m2repository,extra-android-m2repository"
 
@@ -19,9 +19,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Accept License
 
-# Constraint Layout / [Solver for ConstraintLayout 1.0.0-alpha8, ConstraintLayout for Android 1.0.0-alpha8]
 RUN mkdir -p $ANDROID_HOME/licenses/
-RUN echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+RUN echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license
 
 RUN apt-get -qq update && \
     apt-get install -qqy --no-install-recommends \
