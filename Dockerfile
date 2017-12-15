@@ -7,9 +7,9 @@
 FROM ubuntu:16.04
 MAINTAINER Fernando Anthony Ristaño <fernando.ristano@gmail.com>
 
-ENV VERSION_SDK_TOOLS "25.2.5"
-ENV VERSION_BUILD_TOOLS "25.0.3"
-ENV VERSION_TARGET_SDK "25"
+ENV VERSION_SDK_TOOLS "27.0.2"
+ENV VERSION_BUILD_TOOLS "27.0.2"
+ENV VERSION_TARGET_SDK "27"
 
 ENV SDK_PACKAGES "build-tools-${VERSION_BUILD_TOOLS},android-${VERSION_TARGET_SDK},addon-google_apis-google-${VERSION_TARGET_SDK},platform-tools,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository,sys-img-x86-android-${VERSION_TARGET_SDK},sys-img-x86-google_apis-${VERSION_TARGET_SDK},extra-google-google_play_services,extra-google-m2repository,extra-android-m2repository"
 
@@ -47,14 +47,11 @@ RUN apt-get -qq update && \
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-RUN wget -nv http://dl.google.com/android/repository/tools_r${VERSION_SDK_TOOLS}-linux.zip && unzip tools_r${VERSION_SDK_TOOLS}-linux.zip -d /sdk && \
-    rm -v tools_r${VERSION_SDK_TOOLS}-linux.zip
+RUN wget -nv http://dl.google.com/android/repository/build-tools_r${VERSION_SDK_TOOLS}-linux.zip && unzip build-tools_r${VERSION_SDK_TOOLS}-linux.zip -d /sdk && \
+    rm -v build-tools_r${VERSION_SDK_TOOLS}-linux.zip
 
 RUN wget -nv https://pypi.python.org/packages/1e/8e/40c71faa24e19dab555eeb25d6c07efbc503e98b0344f0b4c3131f59947f/vnc2flv-20100207.tar.gz && tar -zxvf vnc2flv-20100207.tar.gz && rm vnc2flv-20100207.tar.gz && \
     cd vnc2flv-20100207 && ln -s /usr/bin/python2.7 /usr/bin/python && python setup.py install
-
-RUN mkdir /sdk/tools/keymaps && \
-    touch /sdk/tools/keymaps/en-us
 
 RUN echo "y" | /sdk/tools/android --silent update sdk --no-ui --all --filter extra-google-google_play_services
 RUN echo "y" | /sdk/tools/android --silent update sdk --no-ui --all --filter extra-google-m2repository
