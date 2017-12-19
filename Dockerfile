@@ -7,11 +7,10 @@
 FROM ubuntu:16.04
 MAINTAINER Fernando Anthony Ristaño <fernando.ristano@gmail.com>
 
-ENV VERSION_SDK_TOOLS "26.0.2"
+# Tools 26.1.1
+ENV VERSION_SDK_TOOLS "4333796"
 ENV VERSION_BUILD_TOOLS "26.0.2"
 ENV VERSION_TARGET_SDK "26"
-
-ENV SDK_PACKAGES "build-tools-${VERSION_BUILD_TOOLS},android-${VERSION_TARGET_SDK},addon-google_apis-google-${VERSION_TARGET_SDK},platform-tools,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository,sys-img-x86-android-${VERSION_TARGET_SDK},sys-img-x86-google_apis-${VERSION_TARGET_SDK},extra-google-google_play_services,extra-google-m2repository,extra-android-m2repository"
 
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
@@ -47,8 +46,8 @@ RUN apt-get -qq update && \
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-RUN wget -nv http://dl.google.com/android/repository/tools_r${VERSION_SDK_TOOLS}-linux.zip && unzip tools_r${VERSION_SDK_TOOLS}-linux.zip -d /sdk && \
-    rm -v tools_r${VERSION_SDK_TOOLS}-linux.zip
+RUN wget -nv https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip && unzip sdk-tools-linux-${VERSION_SDK_TOOLS}.zip -d /sdk && \
+rm -v sdk-tools-linux-${VERSION_SDK_TOOLS}.zip
 
 RUN wget -nv https://pypi.python.org/packages/1e/8e/40c71faa24e19dab555eeb25d6c07efbc503e98b0344f0b4c3131f59947f/vnc2flv-20100207.tar.gz && tar -zxvf vnc2flv-20100207.tar.gz && rm vnc2flv-20100207.tar.gz && \
     cd vnc2flv-20100207 && ln -s /usr/bin/python2.7 /usr/bin/python && python setup.py install
@@ -56,12 +55,21 @@ RUN wget -nv https://pypi.python.org/packages/1e/8e/40c71faa24e19dab555eeb25d6c0
 RUN mkdir /sdk/tools/keymaps && \
     touch /sdk/tools/keymaps/en-us
 
-RUN echo "y" | /sdk/tools/android --silent update sdk --no-ui --all --filter extra-google-google_play_services
-RUN echo "y" | /sdk/tools/android --silent update sdk --no-ui --all --filter extra-google-m2repository
-RUN echo "y" | /sdk/tools/android --silent update sdk --no-ui --all --filter extra-android-m2repository
+RUN echo "y" | /sdk/tools/bin/sdkmanager --update
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "build-tools;${VERSION_BUILD_TOOLS}"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "platforms;android-${VERSION_TARGET_SDK}"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "system-images;android-${VERSION_TARGET_SDK};google_apis;x86"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "system-images;android-${VERSION_TARGET_SDK};google_apis_playstore;x86"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "extras;google;google_play_services" 
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "extras;google;m2repository"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "extras;android;m2repository"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "add-ons;addon-google_apis-google-24"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "platform-tools"
+RUN echo "y" | /sdk/tools/bin/sdkmanager --install "emulator"
 
 RUN mkdir /helpers
 
 COPY wait-for-avd-boot.sh /helpers
 
-RUN (while [ 1 ]; do sleep 5; echo y; done) | ${ANDROID_HOME}/tools/android update sdk -u -a -t ${SDK_PACKAGES}
