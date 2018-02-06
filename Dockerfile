@@ -1,5 +1,5 @@
 #
-# GitLab CI: Android v0.2
+# GitLab CI: Android v1
 #
 # https://hub.docker.com/r/drakor/gitlab-ci-android/
 #
@@ -41,8 +41,12 @@ RUN apt-get -qq update && \
       python2.7 \
       python2.7-dev \
       yamdi \
+      locales \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+    
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
